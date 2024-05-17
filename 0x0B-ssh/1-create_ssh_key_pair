@@ -5,12 +5,26 @@ KEY_NAME="school"
 KEY_BITS=4096
 PASSPHRASE="betty"
 
+# Debugging: Print the variables to ensure they are set correctly
+echo "Key Name: $KEY_NAME"
+echo "Key Bits: $KEY_BITS"
+echo "Passphrase: $PASSPHRASE"
+
 # Create the RSA key pair
 ssh-keygen -t rsa -b $KEY_BITS -f $KEY_NAME -N "$PASSPHRASE"
 
-# Output success message
+# Check the exit status of the ssh-keygen command
 if [ $? -eq 0 ]; then
     echo "RSA key pair '$KEY_NAME' created successfully."
 else
     echo "Failed to create RSA key pair."
+    exit 1
+fi
+
+# Debugging: Verify the files were created
+if [[ -f "$KEY_NAME" && -f "$KEY_NAME.pub" ]]; then
+    echo "Private key '$KEY_NAME' and public key '$KEY_NAME.pub' exist."
+else
+    echo "Key files not found. Something went wrong."
+    exit 1
 fi
